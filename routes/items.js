@@ -52,7 +52,14 @@ router.post("/", upload.single("image"), async (req, res) => {
         contentType: "image/png",
       },
     };
-    res.status(201).send(savedItem);
+    Item.create(savedItem, (err, item) => {
+      if (err) {
+        console.log(error);
+        res.status(400).send(err);
+      } else {
+        res.status(201).send(item);
+      }
+    });
   } catch (err) {
     res.status(400).send(err);
   }
