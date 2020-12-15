@@ -22,6 +22,11 @@ const itemSchema = mongoose.Schema({
     type: Number,
     required: true,
   },
+  ItemPhoto: {
+    data: Buffer,
+    contentType: String,
+    required: true,
+  },
 });
 
 itemSchema.pre("save", (next) => {
