@@ -6,14 +6,14 @@ const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
 
+const NODE_PATH = process.env.PWD;
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    console.log("Test");
     cb(null, "uploads");
   },
   filename: (req, file, cb) => {
-    console.log("Test2");
-    cb(null, file.fieldname + "-" + Date.now());
+    cb(null, "NOOOOOOOOOO" + "-" + Date.now() + ".png");
   },
 });
 
@@ -39,34 +39,66 @@ const upload = multer({ storage: storage });
 //   }
 // });
 
-router.post("/", upload.single("image"), async (req, res) => {
-  // console.log("Hello");
-  // try {
-  //   const savedItem = await {
-  //     Name: req.body.name,
-  //     Quantity: req.body.Quantity,
-  //     MarketPrice: req.body.marketprice,
-  //     SellerValue: req.body.sellervalue,
-  //     AllianceValue: req.body.alliancevalue,
-  //     ItemPhoto: {
-  //       data: fs.readFileSync(
-  //         path.join(__dirname + "/uploads/" + req.file.filename)
-  //       ),
-  //       contentType: "image/png",
-  //     },
-  //   };
-  //   Item.create(savedItem, (err, item) => {
-  //     if (err) {
-  //       console.log(error);
-  //       res.status(400).send(err);
-  //     } else {
-  //       res.status(201).send(item);
-  //     }
-  //   });
-  // } catch (err) {
-  //   console.log(error);
-  //   res.status(400).send(err);
-  // }
+router.post("/", upload.single("ItemPhoto"), async (req, res) => {
+  console.log("req.body");
+  console.log(req.body);
+
+  console.log("Hello");
+  try {
+    const filePath = path.join(
+      NODE_PATH + "/uploads/" + "ItemPhoto-1608073612479.png"
+    );
+
+    fs.readdir(path.join(NODE_PATH + "/uploads/"), (err, files) => {
+      console.log("Printing Files");
+      files.forEach((file) => {
+        console.log(file);
+      });
+    });
+
+    console.log(filePath);
+    console.log("path");
+
+    console.log("Exists:");
+    console.log(fs.existsSync(filePath));
+
+    // fs.mkdir(
+    //   path.join(NODE_PATH + "/uploads/" + "taco"),
+    //   { recursive: true },
+    //   (err) => {
+    //     if (err) throw err;
+
+    //     console.log("Succesfully created file.");
+    //     console.log("Exists now:");
+    //     console.log(fs.existsSync(path.join(NODE_PATH + "/uploads/" + "taco")));
+    //   }
+    // );
+
+    // console.log("access path");
+
+    const savedItem = {
+      Name: req.body.Name,
+      Quantity: req.body.Quantity,
+      MarketPrice: req.body.MarketPrice,
+      SellerValue: req.body.SellerValue,
+      AllianceValue: req.body.AllianceValue,
+      ItemPhoto: {
+        data: fs.readFileSync(filePath),
+        contentType: "image/png",
+      },
+    };
+    Item.create(savedItem, (err, item) => {
+      if (err) {
+        console.log(err);
+        res.status(400).send(err);
+      } else {
+        res.status(201).send(item);
+      }
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(400).send(err);
+  }
 });
 
 // router.put("/:id", async (req, res) => {
@@ -80,7 +112,7 @@ router.post("/", upload.single("image"), async (req, res) => {
 //     AllianceValue: req.body.alliancevalue,
 //     ItemPhoto: {
 //       data: fs.readFileSync(
-//         path.join(__dirname + "/uploads/" + req.file.filename)
+//         path.join(NODE_PATH + "/uploads/" + req.file.filename)
 //       ),
 //       contentType: "image/png",
 //     },

@@ -22,10 +22,10 @@ const itemSchema = mongoose.Schema({
     type: Number,
     required: true,
   },
+  // For smone reason, can't put required here
   ItemPhoto: {
-    type: Buffer,
+    data: Buffer,
     contentType: String,
-    required: true,
   },
 });
 
