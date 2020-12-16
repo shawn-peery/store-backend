@@ -22,10 +22,14 @@ const itemSchema = mongoose.Schema({
     type: Number,
     required: true,
   },
-  // For smone reason, can't put required here
+  // Need to setup ItemPhoto in this way to avoid errors with required: true
+  // https://stackoverflow.com/questions/54600375/set-required-for-object-type-field-in-mongoose
   ItemPhoto: {
-    data: Buffer,
-    contentType: String,
+    type: {
+      data: Buffer,
+      contentType: String,
+    },
+    required: true,
   },
 });
 
