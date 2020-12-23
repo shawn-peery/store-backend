@@ -22,9 +22,14 @@ const upload = multer({ storage: storage });
 router.get("/", async (req, res) => {
   try {
     const items = await Item.find();
+    const string = items[0].ItemPhoto.data.toString("base64");
+
+    console.log(string);
+
     res.status(200).send(items);
-  } catch {
+  } catch (err) {
     res.status(400).send(err);
+    console.error(err);
   }
 });
 
