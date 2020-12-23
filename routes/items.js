@@ -22,11 +22,19 @@ const upload = multer({ storage: storage });
 router.get("/", async (req, res) => {
   try {
     const items = await Item.find();
-    const string = items[0].ItemPhoto.data.toString("base64");
+    // const string = items[0].ItemPhoto.data.toString("base64");
 
-    console.log(string);
+    const finalArray = items.map((item) => {
+      const itemObject = item.toObject();
+      const itemPhotoString = (itemObject.ItemPhoto = convertItemPhotoToBase64(
+        item
+      ));
 
-    res.status(200).send(items);
+      itemObject.ItemPhoto = itemPhotoString;
+      return itemObject;
+    });
+
+    res.status(200).send(finalArray);
   } catch (err) {
     res.status(400).send(err);
     console.error(err);
@@ -123,3 +131,7 @@ router.delete("/:id", async (req, res) => {
 });
 
 module.exports = router;
+
+function convertItemPhotoToBase64(item) {
+  return item.ItemPhoto.data.toString("base64");
+}
